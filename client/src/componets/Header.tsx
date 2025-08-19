@@ -99,10 +99,10 @@ export default function Header() {
             {/* Wishlist (Desktop only) */}
             <Link
               href="/products"
-              className="hidden lg:flex p-2 text-gray-600 hover:text-red-500 transition-colors duration-200 relative"
+              className="hidden lg:flex p-2 text-gray-600 hover:text-orange-500 transition-colors duration-200 relative"
             >
               <Heart className="w-5 h-5" />
-              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center text-[10px]">
+              <span className="absolute -top-1 -right-1 bg-orange-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center text-[10px]">
                 3
               </span>
             </Link>
