@@ -15,6 +15,13 @@ interface AuthResponse {
   token: string;
 }
 
+interface ApiResponse {
+  success: boolean;
+  error: boolean;
+  message: string;
+  data: AuthResponse;
+}
+
 interface AuthState {
   user: User | null;
   token: string | null;
@@ -36,11 +43,13 @@ export const login = createAsyncThunk<
   { rejectValue: { error: string } } // reject type
 >("auth/login", async (data, thunkAPI) => {
   try {
-    const res = await axios.post<AuthResponse>(`${API}/auth/login`, data);
-    localStorage.setItem("token", res.data.token);
-    return res.data;
+    const res = await axios.post<ApiResponse>(`${API}/auth/login`, data);
+    localStorage.setItem("token", res.data.data.token);
+    return res.data.data; // Extract user and token from res.data.data
   } catch (err: any) {
-    return thunkAPI.rejectWithValue(err.response?.data || { error: "Login failed" });
+    return thunkAPI.rejectWithValue({
+      error: err.response?.data?.message || "Login failed",
+    });
   }
 });
 
@@ -50,11 +59,13 @@ export const register = createAsyncThunk<
   { rejectValue: { error: string } }
 >("auth/register", async (data, thunkAPI) => {
   try {
-    const res = await axios.post<AuthResponse>(`${API}/auth/register`, data);
-    localStorage.setItem("token", res.data.token);
-    return res.data;
+    const res = await axios.post<ApiResponse>(`${API}/auth/register`, data);
+    localStorage.setItem("token", res.data.data.token);
+    return res.data.data; // Extract user and token from res.data.data
   } catch (err: any) {
-    return thunkAPI.rejectWithValue(err.response?.data || { error: "Register failed" });
+    return thunkAPI.rejectWithValue({
+      error: err.response?.data?.message || "Register failed",
+    });
   }
 });
 

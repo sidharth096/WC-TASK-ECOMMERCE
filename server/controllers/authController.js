@@ -15,11 +15,12 @@ export const registerUser = async (req, res) => {
 
     // Create new user
     const user = await User.create({ name, email, password: hashed });
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1d" });
     res.json({
       success: true,
       error: false,
       message: "User registered successfully",
-      data: {user}
+      data: { user, token }
     });
   } catch {
     return res.status(500).json({

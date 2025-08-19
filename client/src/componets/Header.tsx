@@ -5,28 +5,29 @@ import { useSelector } from "react-redux";
 import { useState } from "react";
 import type { RootState } from "@/store/store";
 import { CartItem } from "@/store/cartSlice";
+import AuthModal from "./AuthModal";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Get cart items from Redux store
+  // Get cart items and user from Redux store
   const cartItems = useSelector((state: RootState) => state.cart.items) as CartItem[];
-  
+  const user = useSelector((state: RootState) => state.auth.user);
+
   // Calculate total quantity of items in the cart
   const itemCount = cartItems.reduce((total, item) => total + item.qty, 0);
 
   // Toggle mobile menu
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
-  // Navigation items
+  // Navigation items with unique hrefs
   const navItems = [
-    { href: "/products", label: "Home" },
+    { href: "/", label: "Home" },
     { href: "/products", label: "Products" },
-    { href: "/products", label: "Categories" },
-    { href: "/products", label: "About" },
-    { href: "/products", label: "Contact" },
+    { href: "/about", label: "About" },
   ];
 
   return (
@@ -35,8 +36,8 @@ export default function Header() {
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Left: Logo */}
           <div className="flex items-center">
-            <Link 
-              href="/" 
+            <Link
+              href="/"
               className="flex items-center space-x-2 text-2xl lg:text-3xl font-bold text-indigo-600 hover:text-indigo-700 transition-colors duration-200"
             >
               <div className="bg-indigo-600 text-white p-2 rounded-lg shadow-md">
@@ -107,12 +108,13 @@ export default function Header() {
             </Link>
 
             {/* User Account (Desktop only) */}
-            <Link
-              href="/profile"
-              className="hidden lg:flex p-2 text-gray-600 hover:text-indigo-600 transition-colors duration-200"
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="hidden lg:flex items-center p-2 text-gray-600 hover:text-indigo-600 transition-colors duration-200"
             >
-              <User className="w-5 h-5" />
-            </Link>
+              <User className="w-5 h-5 mr-2" />
+              <span>{user ? user.name : "Account"}</span>
+            </button>
 
             {/* Cart Button */}
             <Link
@@ -124,9 +126,8 @@ export default function Header() {
               {itemCount > 0 && (
                 <>
                   <span className="absolute -top-2 -right-2 bg-orange-500 text-white text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center shadow-lg animate-bounce">
-                    {itemCount > 99 ? '99+' : itemCount}
+                    {itemCount > 99 ? "99+" : itemCount}
                   </span>
-                  {/* Cart total for larger screens */}
                   <span className="hidden xl:inline ml-2 text-sm opacity-90">
                     (${cartItems.reduce((total, item) => total + item.price * item.qty, 0).toFixed(2)})
                   </span>
@@ -156,7 +157,10 @@ export default function Header() {
                 <input
                   type="text"
                   placeholder="Search products..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                   className="px-3 py-2 bg-transparent focus:outline-none text-gray-700 w-full"
+                  autoFocus
                 />
               </div>
             </div>
@@ -173,7 +177,7 @@ export default function Header() {
                   {item.label}
                 </Link>
               ))}
-              
+
               {/* Mobile-only links */}
               <Link
                 href="/wishlist"
@@ -186,15 +190,17 @@ export default function Header() {
                   3
                 </span>
               </Link>
-              
-              <Link
-                href="/account"
-                onClick={() => setIsMenuOpen(false)}
-                className="flex items-center px-4 py-3 text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg font-medium transition-all duration-200"
+
+              <button
+                onClick={() => {
+                  setIsModalOpen(true);
+                  setIsMenuOpen(false);
+                }}
+                className="flex items-center px-4 py-3 text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg font-medium transition-all duration-200 w-full"
               >
                 <User className="w-5 h-5 mr-3" />
-                My Account
-              </Link>
+                {user ? user.name : "My Account"}
+              </button>
             </nav>
 
             {/* Mobile Cart Summary */}
@@ -229,7 +235,10 @@ export default function Header() {
                   autoFocus
                 />
                 <button
-                  onClick={() => setIsSearchOpen(false)}
+                  onClick={() => {
+                    setIsSearchOpen(false);
+                    setSearchQuery("");
+                  }}
                   className="p-2 text-gray-400 hover:text-gray-600"
                 >
                   <X className="w-4 h-4" />
@@ -239,6 +248,13 @@ export default function Header() {
           </div>
         </div>
       )}
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        initialMode={user ? "profile" : "login"}
+      />
     </header>
   );
 }
