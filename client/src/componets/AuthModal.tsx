@@ -1,4 +1,3 @@
-
 "use client";
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
@@ -142,9 +141,10 @@ const AuthModal: React.FC<AuthModalProps> = ({
         onClose();
       }
       setFormData({ name: "", email: "", password: "" });
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const errorPayload = err as { error: string };
       const errorMessage =
-        err?.message || error || "Something went wrong. Please try again.";
+        errorPayload.error || error || "Something went wrong. Please try again.";
       toast.error(errorMessage, { position: "top-right" });
     }
   };
@@ -408,7 +408,7 @@ const AuthModal: React.FC<AuthModalProps> = ({
             <div className="mt-6 text-center">
               {mode === "login" ? (
                 <p className="text-gray-600">
-                  Don't have an account?{" "}
+                  Don&apos;t have an account?{" "}
                   <button
                     onClick={() => switchMode("signup")}
                     className="text-indigo-600 hover:text-indigo-700 font-medium"

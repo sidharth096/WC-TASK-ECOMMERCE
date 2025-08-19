@@ -23,11 +23,11 @@ export default function NotFound() {
             Oops! Page Not Found
           </h1>
           <p className="text-xl md:text-2xl text-gray-600 mb-6 max-w-2xl mx-auto animate-fade-in delay-300">
-            The page you're looking for seems to have wandered off into the
+            The page you&apos;re looking for seems to have wandered off into the
             digital wilderness.
           </p>
           <p className="text-lg text-gray-500 animate-fade-in delay-500">
-            Don't worry, even the best explorers sometimes take a wrong turn!
+            Don&apos;t worry, even the best explorers sometimes take a wrong turn!
           </p>
         </div>
 

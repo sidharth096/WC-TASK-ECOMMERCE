@@ -6,6 +6,7 @@ import { fetchProducts } from "@/store/productsSlice";
 import { addToCart } from "@/store/cartSlice"; // Import addToCart action
 import Link from "next/link";
 import toast from "react-hot-toast"; // Import react-hot-toast for notifications
+import Image from "next/image";
 
 export default function ProductsPage() {
   const dispatch = useDispatch<AppDispatch>();
@@ -25,7 +26,7 @@ export default function ProductsPage() {
     _id: string;
     title: string;
     price: number;
-    image?: string;
+    image: string;
   }) => {
     dispatch(
       addToCart({
@@ -128,11 +129,11 @@ export default function ProductsPage() {
                 >
                   {/* Product Image */}
                   <div className="relative overflow-hidden">
-                    <img
+                    <Image
                       src={product.image}
                       alt={product.title}
                       className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
-                      onError={(e) => (e.currentTarget.src = '/fallback-image.jpg')} // Fallback image
+                      onError={(e) => (e.currentTarget.src = "/fallback-image.jpg")} // Fallback image
                     />
                     <div className="absolute top-3 right-3">
                       <button className="bg-white/90 hover:bg-white p-2 rounded-full shadow-md transition-colors duration-200">

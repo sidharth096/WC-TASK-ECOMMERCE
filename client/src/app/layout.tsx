@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/componets/Header";
-import { Provider } from "react-redux";
-import { store } from "@/store/store.js";
 import ClientProvider from "@/componets/ClientProvider";
 
 const geistSans = Geist({

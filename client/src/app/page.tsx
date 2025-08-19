@@ -19,7 +19,7 @@ export default function Home() {
                   🛍️
                 </h1>
                 <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-2xl mx-auto lg:mx-0">
-                  Discover amazing products, unbeatable prices, and shopping experiences that'll make you smile
+                  Discover amazing products, unbeatable prices, and shopping experiences that&apos;ll make you smile
                 </p>
               </div>
 
@@ -124,7 +124,7 @@ export default function Home() {
               Why Shop With Us?
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              We're committed to making your shopping experience exceptional
+              We&apos;re committed to making your shopping experience exceptional
             </p>
           </div>
 
@@ -151,7 +151,7 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3">Quality Guaranteed</h3>
               <p className="text-gray-600">
-                30-day money-back guarantee. If you're not satisfied, we'll make it right.
+                30-day money-back guarantee. If you&apos;re not satisfied, we&apos;ll make it right.
               </p>
             </div>
 
@@ -193,7 +193,7 @@ export default function Home() {
       </section>
 
       {/* Custom Styles */}
-      <style jsx>{`
+      <style>{`
         @keyframes fade-in {
           from { opacity: 0; transform: translateY(20px); }
           to { opacity: 1; transform: translateY(0); }

@@ -1,5 +1,6 @@
+
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 const API = process.env.NEXT_PUBLIC_API_BASE_URL as string;
 
@@ -20,6 +21,12 @@ interface ApiResponse {
   error: boolean;
   message: string;
   data: AuthResponse;
+}
+
+interface ApiErrorResponse {
+  success: boolean;
+  error?: boolean;
+  message: string;
 }
 
 interface AuthState {
@@ -46,9 +53,10 @@ export const login = createAsyncThunk<
     const res = await axios.post<ApiResponse>(`${API}/auth/login`, data);
     localStorage.setItem("token", res.data.data.token);
     return res.data.data; // Extract user and token from res.data.data
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const error = err as AxiosError<ApiErrorResponse>;
     return thunkAPI.rejectWithValue({
-      error: err.response?.data?.message || "Login failed",
+      error: error.response?.data?.message || error.message || "Login failed",
     });
   }
 });
@@ -62,9 +70,10 @@ export const register = createAsyncThunk<
     const res = await axios.post<ApiResponse>(`${API}/auth/register`, data);
     localStorage.setItem("token", res.data.data.token);
     return res.data.data; // Extract user and token from res.data.data
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const error = err as AxiosError<ApiErrorResponse>;
     return thunkAPI.rejectWithValue({
-      error: err.response?.data?.message || "Register failed",
+      error: error.response?.data?.message || error.message || "Register failed",
     });
   }
 });
@@ -96,7 +105,6 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = action.payload?.error || "Login failed";
       })
-
       // REGISTER
       .addCase(register.pending, (state) => {
         state.loading = true;
