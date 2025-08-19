@@ -3,6 +3,9 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState, AppDispatch } from "@/store/store";
 import { fetchProducts } from "@/store/productsSlice";
+import { addToCart } from "@/store/cartSlice"; // Import addToCart action
+import Link from "next/link";
+import toast from "react-hot-toast"; // Import react-hot-toast for notifications
 
 export default function ProductsPage() {
   const dispatch = useDispatch<AppDispatch>();
@@ -16,6 +19,27 @@ export default function ProductsPage() {
   useEffect(() => {
     dispatch(fetchProducts());
   }, [dispatch]);
+
+  // Handler for adding a product to the cart
+  const handleAddToCart = (product: {
+    _id: string;
+    title: string;
+    price: number;
+    image?: string;
+  }) => {
+    dispatch(
+      addToCart({
+        _id: product._id,
+        title: product.title,
+        price: product.price,
+        image: product.image,
+      })
+    );
+    toast.success(`${product.title} added to cart!`, {
+      position: "top-right",
+      duration: 3000,
+    });
+  };
 
   if (loading) {
     return (
@@ -77,6 +101,15 @@ export default function ProductsPage() {
                 <p className="text-gray-600 mt-1">{products.length} items available</p>
               </div>
               <div className="flex items-center space-x-4">
+                <Link
+                  href="/cart"
+                  className="text-indigo-600 hover:text-indigo-700 font-medium flex items-center space-x-2"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01" />
+                  </svg>
+                  <span>View Cart</span>
+                </Link>
                 <select className="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                   <option>Sort by: Featured</option>
                   <option>Price: Low to High</option>
@@ -99,6 +132,7 @@ export default function ProductsPage() {
                       src={product.image}
                       alt={product.title}
                       className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+                      onError={(e) => (e.currentTarget.src = '/fallback-image.jpg')} // Fallback image
                     />
                     <div className="absolute top-3 right-3">
                       <button className="bg-white/90 hover:bg-white p-2 rounded-full shadow-md transition-colors duration-200">
@@ -149,7 +183,10 @@ export default function ProductsPage() {
                     </div>
 
                     {/* Add to Cart Button */}
-                    <button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-indigo-200 flex items-center justify-center space-x-2">
+                    <button
+                      onClick={() => handleAddToCart(product)}
+                      className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-indigo-200 flex items-center justify-center space-x-2"
+                    >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01" />
                       </svg>
